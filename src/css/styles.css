@@ -147,3 +147,11 @@ body {
     outline-offset: 4px;
   }
 }
+
+.correct {
+  background-color: var(--clr-green);
+}
+
+.incorrect {
+  background-color: var(--clr-red);
+}

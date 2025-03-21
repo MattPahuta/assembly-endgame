@@ -1,6 +1,7 @@
 import React from 'react';
 import Banner from './Banner';
 import LanguageChips from './LanguageChips';
+import { clsx } from 'clsx';
 
 function AssemblyEndgame() {
 
@@ -18,6 +19,7 @@ function AssemblyEndgame() {
     )
   }
 
+
   const letterElements = currentWord.split('').map((letter, index) => {
     return (
       <p key={index} className="letter">
@@ -28,11 +30,30 @@ function AssemblyEndgame() {
 
   const alphabet = 'abcdefghijklmnopqrstuvwxyz';
 
-  const keyboardElements = alphabet.split('').map((letter, index) => (
-    <button key={index} onClick={() => addGuessedLetter(letter)} className="button keyboard-button">
-      {letter.toUpperCase()}
-    </button>
-  ));
+  const keyboardElements = alphabet.split('').map((letter) => {
+    // has letter been guessed?
+    const isGuessed = guessedLetters.includes(letter);
+    // if the letter has been guessed, is it in the current word?
+    const isCorrect = isGuessed && currentWord.includes(letter);
+    // if the letter has been guessed, is it NOT in the current word?
+    const isIncorrect = isGuessed && !currentWord.includes(letter);
+    // build the class name based on the above conditions
+    const className = clsx('button, keyboard-button',{
+      correct: isCorrect,
+      incorrect: isIncorrect,
+    })
+
+
+    return (
+      <button 
+        className={className}
+        key={letter} 
+        onClick={() => addGuessedLetter(letter)}
+      >
+        {letter.toUpperCase()}
+      </button>
+    )
+  });
 
   return (
     <div className="game-wrapper">
