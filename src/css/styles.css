@@ -1,5 +1,5 @@
 :root {
-  --ff-primary: "Hanken Grotesk", Arial, sans-serif;
+  --ff-primary: 'Hanken Grotesk', Arial, sans-serif;
   --fs-300: 0.875rem;
   --fs-400: 1rem;
   --fs-500: 1.25rem;
@@ -7,14 +7,14 @@
   --fs-700: 2.25rem;
   --clr-bg-dark: #262626;
   --clr-neutral-100: #f5f5f5;
-  --clr-neutral-200: #D9D9D9;
+  --clr-neutral-200: #d9d9d9;
   --clr-neutral-700: #323232;
-  --clr-yellow: #FCBA29;
-  --clr-green: #10A95B;
-  --clr-red: #EC5D49;
-  --clr-alert-800: #BA2A2A;
-  --clr-blue: #11B5E5;
-  --clr-purple: #7A5EA7;
+  --clr-yellow: #fcba29;
+  --clr-green: #10a95b;
+  --clr-red: #ec5d49;
+  --clr-alert-800: #ba2a2a;
+  --clr-blue: #11b5e5;
+  --clr-purple: #7a5ea7;
   --border-radius-200: 0.25rem;
   --border-readius-400: 0.5rem;
 }
@@ -32,7 +32,6 @@ body {
 .wrapper {
   max-width: 800px;
   width: 100%;
-
 }
 
 .header {
@@ -44,7 +43,6 @@ body {
     font-weight: 600;
     color: var(--clr-neutral-100);
   }
-
 }
 
 .game-wrapper {
@@ -70,8 +68,23 @@ body {
 }
 
 .language-chip {
+  position: relative;
   padding: 0.5rem 1rem;
   border-radius: 0.25rem;
+}
+
+.language-chip.lost::before {
+  content: '💀';
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  font-size: var(--fs-500);
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 /* Word Display */
@@ -112,9 +125,9 @@ body {
   font-weight: 600;
   cursor: pointer;
   transition: all 100ms ease-in-out;
-  
+
   @media screen and (--ms-high-contrast: active) {
-    border: 2px solid currentColor
+    border: 2px solid currentColor;
   }
 }
 

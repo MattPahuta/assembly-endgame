@@ -4,11 +4,15 @@ import LanguageChips from './LanguageChips';
 import { clsx } from 'clsx';
 
 function AssemblyEndgame() {
-
+  // State values
   const [currentWord, setCurrentWord] = React.useState('react');
   const [guessedLetters, setGuessedLetters] = React.useState([]);
+  // Derived values
+  const wrongGuessCount = guessedLetters.filter(letter => !currentWord.includes(letter)).length;
 
-  console.log(guessedLetters);
+  // Static values / constants
+  const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+
 
   function addGuessedLetter(letter) {
     // Add the clicked letter to the guessedLetters array
@@ -21,15 +25,16 @@ function AssemblyEndgame() {
 
 
   const letterElements = currentWord.split('').map((letter, index) => {
+    const isGuessed = guessedLetters.includes(letter);
     return (
       <p key={index} className="letter">
-        {letter.toUpperCase()}
+        {isGuessed ? letter.toUpperCase() : ''}
       </p>
     )
   })
 
-  const alphabet = 'abcdefghijklmnopqrstuvwxyz';
 
+  // Create a button for each letter in the alphabet
   const keyboardElements = alphabet.split('').map((letter) => {
     // has letter been guessed?
     const isGuessed = guessedLetters.includes(letter);
@@ -38,7 +43,7 @@ function AssemblyEndgame() {
     // if the letter has been guessed, is it NOT in the current word?
     const isIncorrect = isGuessed && !currentWord.includes(letter);
     // build the class name based on the above conditions
-    const className = clsx('button, keyboard-button',{
+    const className = clsx('button keyboard-button',{
       correct: isCorrect,
       incorrect: isIncorrect,
     })
@@ -58,7 +63,7 @@ function AssemblyEndgame() {
   return (
     <div className="game-wrapper">
       <Banner />
-      <LanguageChips />
+      <LanguageChips wrongGuessCount={wrongGuessCount} />
       <section className="word-section">
         <div className="word-container">
         {letterElements}

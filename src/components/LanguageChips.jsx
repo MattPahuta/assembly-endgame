@@ -1,11 +1,16 @@
 import {languages} from '../data/languages.js';
+import { clsx } from 'clsx';
 
-function LanguageChips() {
+function LanguageChips({wrongGuessCount}) {
   // Create a div for each language in the languages array
-  const languageChipElements = languages.map(language => {
+  const languageChipElements = languages.map((language, index) => {
+    // determine if rendered language chip has been lost
+    const isLanguageLost = index < wrongGuessCount;
+    const className = clsx('language-chip', isLanguageLost && 'lost');
+
     return (
       <div
-        className="language-chip"
+        className={className}
         key={language.name}
         style={{
           backgroundColor: language.backgroundColor,
