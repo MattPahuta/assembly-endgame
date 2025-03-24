@@ -2,6 +2,9 @@ import React from 'react';
 import Banner from './Banner';
 import LanguageChips from './LanguageChips';
 import { clsx } from 'clsx';
+import { languages } from '../data/languages';
+import WonBanner from './WonBanner';
+import LostBanner from './LostBanner';
 
 function AssemblyEndgame() {
   // State values
@@ -10,6 +13,16 @@ function AssemblyEndgame() {
   // Derived values
   const wrongGuessCount = guessedLetters.filter(letter => !currentWord.includes(letter)).length;
 
+  const isGameWon = currentWord
+    .split('')
+    .every((letter) =>
+      guessedLetters.includes(letter)
+    );
+  const isGameLost = wrongGuessCount >= languages.length - 1;
+  const isGameOver = isGameWon || isGameLost;
+
+  // ToDo: add constants file? language number, alphabet
+  // - import languages/languages.length to assign value?
   // Static values / constants
   const alphabet = 'abcdefghijklmnopqrstuvwxyz';
 
@@ -60,23 +73,31 @@ function AssemblyEndgame() {
     )
   });
 
+  const bannerSectionClassName = clsx('banner', {
+    won: isGameWon,
+    lost: isGameLost,
+  })
+
+  // Banner needs
+
   return (
     <div className="game-wrapper">
-      <Banner />
+      <section className={bannerSectionClassName}>
+        {isGameWon && <WonBanner />}
+        {isGameLost && <LostBanner />}
+      </section>
       <LanguageChips wrongGuessCount={wrongGuessCount} />
       <section className="word-section">
-        <div className="word-container">
-        {letterElements}
-        </div>
+        <div className="word-container">{letterElements}</div>
       </section>
       <section className="keyboard-section">
-        <div className="keyboard">
-          {keyboardElements}
-        </div>
+        <div className="keyboard">{keyboardElements}</div>
       </section>
-      <button className="button new-game-button">New Game</button>
+      {isGameOver && (
+        <button className="button new-game-button">New Game</button>
+      )}
     </div>
-  )
+  );
 }
 
 export default AssemblyEndgame;
