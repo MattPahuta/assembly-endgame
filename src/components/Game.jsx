@@ -1,5 +1,5 @@
 import React from 'react';
-import Banner from './Banner';
+import A11yStatus from './A11yStatus';
 import LanguageChips from './LanguageChips';
 import { clsx } from 'clsx';
 import { languages } from '../data/languages';
@@ -12,8 +12,17 @@ function AssemblyEndgame() {
   const [currentWord, setCurrentWord] = React.useState('react');
   const [guessedLetters, setGuessedLetters] = React.useState([]);
   // Derived values
+  const startingWrongGuessesAvailable = languages.length - 2;
+  console.log(startingWrongGuessesAvailable);
   const wrongGuessCount = guessedLetters.filter(letter => !currentWord.includes(letter)).length;
 
+  // Game status logic
+  console.log('Wrong guess count: ', wrongGuessCount);
+  const currentWrongGuessesAvailable = startingWrongGuessesAvailable - wrongGuessCount;
+  console.log(`You onnly have ${currentWrongGuessesAvailable} wrong guesses left!`);
+
+
+  const [isGameStarted, setIsGameStarted] = React.useState(false);
   const isGameWon = currentWord
     .split('')
     .every((letter) =>
@@ -24,6 +33,8 @@ function AssemblyEndgame() {
   // check for wrong answer
   const lastGuessedLetter = guessedLetters[guessedLetters.length - 1];
   const isLastGuessIncorrect = lastGuessedLetter && !currentWord.includes(lastGuessedLetter)
+
+
 
   // ToDo: add constants file? language number, alphabet
   // - import languages/languages.length to assign value?
@@ -38,9 +49,11 @@ function AssemblyEndgame() {
       prevLetters.includes(letter) ? prevLetters : [...prevLetters, letter]
       )
     )
+    setIsGameStarted(true);
 
   }
 
+  // Create <p> elements for each letter of current game word
   const letterElements = currentWord.split('').map((letter, index) => {
     const isGuessed = guessedLetters.includes(letter);
     return (
@@ -70,6 +83,9 @@ function AssemblyEndgame() {
       <button 
         className={className}
         key={letter} 
+        disabled={isGameOver}
+        aria-label={`Letter ${letter}`}
+        aria-disabled={guessedLetters.includes(letter)}
         onClick={() => addGuessedLetter(letter)}
       >
         {letter.toUpperCase()}
@@ -83,20 +99,31 @@ function AssemblyEndgame() {
     farewell: !isGameOver && isLastGuessIncorrect,
   })
 
-  // Banner needs
-
+  // ToDo: each section should have a heading
   return (
     <div className="game-wrapper">
-      <section className={bannerSectionClassName}>
+      <section className={bannerSectionClassName} aria-live='polite' role='status'>
         {(!isGameOver && isLastGuessIncorrect) && <StatusBanner lostLanguage={languages[wrongGuessCount - 1].name} />}
         {isGameWon && <WonBanner />}
         {isGameLost && <LostBanner />}
       </section>
       <LanguageChips wrongGuessCount={wrongGuessCount} />
       <section className="word-section">
+        <h2 className='visually-hidden'>Game Word</h2>
         <div className="word-container">{letterElements}</div>
       </section>
+      {/* Section for accessibility-specific content (sr-only). ToDo: create components, helper funcs */}
+      {/* Only render this if game has started - add isGameInProgress state */}
+      <A11yStatus
+        isGameStarted={isGameStarted}
+        currentWord={currentWord}
+        lastGuessedLetter={lastGuessedLetter}
+        isLastGuessIncorrect={isLastGuessIncorrect}
+        currentWrongGuessesAvailable={currentWrongGuessesAvailable}
+        guessedLetters={guessedLetters}
+      />
       <section className="keyboard-section">
+        <h2 className='visually-hidden'>Game Keyboard</h2>
         <div className="keyboard">{keyboardElements}</div>
       </section>
       {isGameOver && (
