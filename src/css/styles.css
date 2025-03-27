@@ -191,6 +191,16 @@ body {
   background-color: var(--clr-red);
 }
 
+.correctLetter {
+  color: var(--clr-green);
+  border-color: var(--clr-green);
+}
+
+.missedLetter {
+  color: var(--clr-red);
+  border-color: var(--clr-red);
+}
+
 .visually-hidden {
   clip: rect(0 0 0 0);
   clip-path: inset(50%);

@@ -3,14 +3,19 @@ import A11yStatus from './A11yStatus';
 import LanguageChips from './LanguageChips';
 import { clsx } from 'clsx';
 import { languages } from '../data/languages';
+import { words } from '../data/words';
+import { getRandomWord } from '../utils';
 import WonBanner from './WonBanner';
 import LostBanner from './LostBanner';
 import StatusBanner from './StatusBanner';
+import Confetti from 'react-confetti';
 
 function AssemblyEndgame() {
   // State values
-  const [currentWord, setCurrentWord] = React.useState('react');
+  const [currentWord, setCurrentWord] = React.useState(() => getRandomWord(words));
   const [guessedLetters, setGuessedLetters] = React.useState([]);
+  console.log('Current word: ', currentWord);
+
   // Derived values
   const startingWrongGuessesAvailable = languages.length - 2;
   console.log(startingWrongGuessesAvailable);
@@ -41,6 +46,12 @@ function AssemblyEndgame() {
   // Static values / constants
   const alphabet = 'abcdefghijklmnopqrstuvwxyz';
 
+  // Reset game to fresh state
+  function resetGame() {
+    setCurrentWord(getRandomWord(words));
+    setGuessedLetters([]);
+    setIsGameStarted(false);
+  }
 
   function addGuessedLetter(letter) {
     // Add the clicked letter to the guessedLetters array
@@ -53,12 +64,18 @@ function AssemblyEndgame() {
 
   }
 
+  // Render the current game word
   // Create <p> elements for each letter of current game word
   const letterElements = currentWord.split('').map((letter, index) => {
-    const isGuessed = guessedLetters.includes(letter);
+    const shouldRevealLetter = isGameLost || guessedLetters.includes(letter);
+    const letterClassName = clsx('letter', {
+      missedLetter: isGameLost && !guessedLetters.includes(letter),
+      correctLetter: (isGameLost || isGameWon) && guessedLetters.includes(letter),
+    });
+
     return (
-      <p key={index} className="letter">
-        {isGuessed ? letter.toUpperCase() : ''}
+      <p key={index} className={letterClassName}>
+        {shouldRevealLetter ? letter.toUpperCase() : ''}
       </p>
     )
   })
@@ -102,6 +119,12 @@ function AssemblyEndgame() {
   // ToDo: each section should have a heading
   return (
     <div className="game-wrapper">
+      {isGameWon && 
+        <Confetti 
+          recycle={false}
+          numberOfPieces={1000}
+        />
+      }
       <section className={bannerSectionClassName} aria-live='polite' role='status'>
         {(!isGameOver && isLastGuessIncorrect) && <StatusBanner lostLanguage={languages[wrongGuessCount - 1].name} />}
         {isGameWon && <WonBanner />}
@@ -127,7 +150,7 @@ function AssemblyEndgame() {
         <div className="keyboard">{keyboardElements}</div>
       </section>
       {isGameOver && (
-        <button className="button new-game-button">New Game</button>
+        <button onClick={resetGame} className="button new-game-button">New Game</button>
       )}
     </div>
   );
