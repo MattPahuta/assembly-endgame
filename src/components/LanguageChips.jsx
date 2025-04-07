@@ -25,9 +25,10 @@ function LanguageChips({wrongGuessCount}) {
   })
 
   return (
-    <div className="language-chips">
+    <section className="language-chips">
+      <h2 className="visually-hidden">Programming Languages to Save!</h2>
       {languageChipElements}
-    </div>
+    </section>
   )
 }
 

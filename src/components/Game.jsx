@@ -15,7 +15,7 @@ function AssemblyEndgame() {
   const [currentWord, setCurrentWord] = React.useState(() => getRandomWord(words));
   const [guessedLetters, setGuessedLetters] = React.useState([]);
   console.log('Current word: ', currentWord);
-
+  console.log('Guessed letters: ', guessedLetters);
   // Derived values
   const startingWrongGuessesAvailable = languages.length - 2;
   console.log(startingWrongGuessesAvailable);
@@ -25,7 +25,6 @@ function AssemblyEndgame() {
   console.log('Wrong guess count: ', wrongGuessCount);
   const currentWrongGuessesAvailable = startingWrongGuessesAvailable - wrongGuessCount;
   console.log(`You onnly have ${currentWrongGuessesAvailable} wrong guesses left!`);
-
 
   const [isGameStarted, setIsGameStarted] = React.useState(false);
   const isGameWon = currentWord
@@ -39,8 +38,6 @@ function AssemblyEndgame() {
   const lastGuessedLetter = guessedLetters[guessedLetters.length - 1];
   const isLastGuessIncorrect = lastGuessedLetter && !currentWord.includes(lastGuessedLetter)
 
-
-
   // ToDo: add constants file? language number, alphabet
   // - import languages/languages.length to assign value?
   // Static values / constants
@@ -53,15 +50,14 @@ function AssemblyEndgame() {
     setIsGameStarted(false);
   }
 
+  // Add the clicked letter to the guessedLetters array
   function addGuessedLetter(letter) {
-    // Add the clicked letter to the guessedLetters array
     // Check if the clicked letter is in the currentWord
     setGuessedLetters(prevLetters => (
       prevLetters.includes(letter) ? prevLetters : [...prevLetters, letter]
       )
     )
     setIsGameStarted(true);
-
   }
 
   // Render the current game word
@@ -80,7 +76,6 @@ function AssemblyEndgame() {
     )
   })
 
-
   // Create a button for each letter in the alphabet
   const keyboardElements = alphabet.split('').map((letter) => {
     // has letter been guessed?
@@ -95,12 +90,11 @@ function AssemblyEndgame() {
       incorrect: isIncorrect,
     })
 
-
     return (
       <button 
         className={className}
         key={letter} 
-        disabled={isGameOver}
+        disabled={isGuessed || isGameOver}
         aria-label={`Letter ${letter}`}
         aria-disabled={guessedLetters.includes(letter)}
         onClick={() => addGuessedLetter(letter)}
@@ -116,7 +110,6 @@ function AssemblyEndgame() {
     farewell: !isGameOver && isLastGuessIncorrect,
   })
 
-  // ToDo: each section should have a heading
   return (
     <div className="game-wrapper">
       {isGameWon && 
@@ -126,6 +119,7 @@ function AssemblyEndgame() {
         />
       }
       <section className={bannerSectionClassName} aria-live='polite' role='status'>
+        <h2 className='visually-hidden'>Current Game Status</h2>
         {(!isGameOver && isLastGuessIncorrect) && <StatusBanner lostLanguage={languages[wrongGuessCount - 1].name} />}
         {isGameWon && <WonBanner />}
         {isGameLost && <LostBanner />}
@@ -135,7 +129,6 @@ function AssemblyEndgame() {
         <h2 className='visually-hidden'>Game Word</h2>
         <div className="word-container">{letterElements}</div>
       </section>
-      {/* Section for accessibility-specific content (sr-only). ToDo: create components, helper funcs */}
       {/* Only render this if game has started - add isGameInProgress state */}
       <A11yStatus
         isGameStarted={isGameStarted}

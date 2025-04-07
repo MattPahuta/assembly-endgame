@@ -158,7 +158,7 @@ body {
   height: 70px;
   background-color: var(--clr-yellow);
   color: var(--clr-neutral-700);
-  border: 1px solid var(--clr-neutral-200);
+  border: none;
   border-radius: var(--border-radius-200);
 
   &:hover {
@@ -185,10 +185,20 @@ body {
 
 .correct {
   background-color: var(--clr-green);
+
+  &:hover,
+  &:focus-visible {
+    background-color: var(--clr-green);
+  }
 }
 
 .incorrect {
   background-color: var(--clr-red);
+
+  &:hover,
+  &:focus-visible {
+    background-color: var(--clr-red);
+  }
 }
 
 .correctLetter {

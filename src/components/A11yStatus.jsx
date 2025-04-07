@@ -13,6 +13,7 @@ function A11yStatus({isGameStarted, currentWord, lastGuessedLetter, isLastGuessI
 
   return (
     <section
+      id="a11y-status"
       className="visually-hidden"
       aria-live="polite"
       role="status">
