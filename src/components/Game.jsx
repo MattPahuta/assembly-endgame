@@ -5,6 +5,7 @@ import { clsx } from 'clsx';
 import { languages } from '../data/languages';
 import { words } from '../data/words';
 import { getRandomWord } from '../utils';
+import { ALPHABET } from '../constants';
 import WonBanner from './WonBanner';
 import LostBanner from './LostBanner';
 import StatusBanner from './StatusBanner';
@@ -36,12 +37,10 @@ function AssemblyEndgame() {
   const isGameOver = isGameWon || isGameLost;
   // check for wrong answer
   const lastGuessedLetter = guessedLetters[guessedLetters.length - 1];
-  const isLastGuessIncorrect = lastGuessedLetter && !currentWord.includes(lastGuessedLetter)
+  const isLastGuessIncorrect = lastGuessedLetter && !currentWord.includes(lastGuessedLetter);
 
-  // ToDo: add constants file? language number, alphabet
   // - import languages/languages.length to assign value?
-  // Static values / constants
-  const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+  // const alphabet = 'abcdefghijklmnopqrstuvwxyz';
 
   // Reset game to fresh state
   function resetGame() {
@@ -77,7 +76,8 @@ function AssemblyEndgame() {
   })
 
   // Create a button for each letter in the alphabet
-  const keyboardElements = alphabet.split('').map((letter) => {
+  // ToDo: increase size of keyboard buttons for A11Y
+  const keyboardButtons = ALPHABET.map((letter) => {
     // has letter been guessed?
     const isGuessed = guessedLetters.includes(letter);
     // if the letter has been guessed, is it in the current word?
@@ -140,7 +140,7 @@ function AssemblyEndgame() {
       />
       <section className="keyboard-section">
         <h2 className='visually-hidden'>Game Keyboard</h2>
-        <div className="keyboard">{keyboardElements}</div>
+        <div className="keyboard">{keyboardButtons}</div>
       </section>
       {isGameOver && (
         <button onClick={resetGame} className="button new-game-button">New Game</button>
