@@ -59,6 +59,7 @@ function AssemblyEndgame() {
     setIsGameStarted(true);
   }
 
+  // ToDo: Rename this to something more descriptive (e.g. renderGameWord)
   // Render the current game word
   // Create <p> elements for each letter of current game word
   const letterElements = currentWord.split('').map((letter, index) => {

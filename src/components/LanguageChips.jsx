@@ -1,4 +1,4 @@
-import {languages} from '../data/languages.js';
+import { languages } from '../data/languages.js';
 import { clsx } from 'clsx';
 
 function LanguageChips({wrongGuessCount}) {
